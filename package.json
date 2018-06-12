@@ -1,0 +1,25 @@
+{
+  "name": "com.verisure.yale.doorman",
+  "version": "0.0.1",
+  "description": "This app allows you to connect your Yale Doorman to Homey",
+  "main": "app.js",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "lodash": "^4.17.10",
+    "verisure": "^2.4.0"
+  },
+  "scripts": {
+    "run": "homeyConfig compose && athom project --run",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slasktrat/com.verisure.yale.doorman.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/slasktrat/com.verisure.yale.doorman/issues"
+  },
+  "homepage": "https://github.com/slasktrat/com.verisure.yale.doorman#readme"
+}

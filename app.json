@@ -1,0 +1,76 @@
+{
+  "id": "com.verisure.yale.doorman",
+  "sdk": 2,
+  "name": {
+    "en": "Yale Doorman"
+  },
+  "description": {
+    "en": "Yale Doorman"
+  },
+  "category": "security",
+  "version": "0.0.1",
+  "compatibility": ">=1.5.3",
+  "author": {
+    "name": "Espen Ljosland",
+    "email": "espen@ljosland.com"
+  },
+  "permissions": [],
+  "images": {
+    "large": "/assets/images/large.png",
+    "small": "/assets/images/small.png"
+  },
+  "drivers": [
+    {
+      "id": "doorman",
+      "name": {
+        "en": "Yale Doorman"
+      },
+      "class": "lock",
+      "capabilities": [
+        "locked"
+      ],
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "images": {
+        "large": "/drivers/doorman/assets/images/large.png",
+        "small": "/drivers/doorman/assets/images/small.png"
+      },
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "General settings"
+          },
+          "children": [
+            {
+              "id": "code",
+              "type": "number",
+              "label": {
+                "en": "Door lock code"
+              },
+              "value": 0,
+              "attr": {
+                "min": 100000,
+                "max": 999999
+              },
+              "hint": {
+                "en": "The code needed to lock and unlock the door."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
