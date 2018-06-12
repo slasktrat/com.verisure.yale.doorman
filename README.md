@@ -1,13 +1,24 @@
 # Yale Doorman
 
-Homey App for the Yale Doorman
+Homey App for the Yale Doorman door lock
 
-First setup the credentials in the App settings page.
+First enter your verisure credentials in the App settings page.\
+Then after added a lock, remember to input your pin code in the device settings page to be able to lock and unlock.
 
+Both credentials and pin code are stored securely on your own Homey.
+
+## Disclaimer 
+This app uses an unofficial api from verisure which may break at any time. And if so should happen the app would stop working. However the api seem to have been stable for a long time, so hopefully that will continue to last.
+
+To prevent your account risking to be banned, poll interval is limited to minimum 60 seconds and can be increased in the app settings page.
+
+Use at your own risk.
+
+## Credits
 Thanks to ptz0n for creating node-verisure
 https://github.com/ptz0n/node-verisure
 
-Icon made by [Those Icons](https://www.flaticon.com/authors/those-icons) from www.flaticon.com 
+Door icon made by [Those Icons](https://www.flaticon.com/authors/those-icons) from www.flaticon.com 
 
 ## License
 The MIT License (MIT)
