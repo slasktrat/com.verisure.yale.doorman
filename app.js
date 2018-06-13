@@ -94,14 +94,15 @@ class YaleDoormanApp extends Homey.App {
 
         let installation = this.getInstallation(deviceLabel);
 
+        let logger = this.log;
         let retry = 0;
         function resolveChangeResult(uri) {
-            this.log(`Resolving: ${uri}`);
+            logger(`Resolving: ${uri}`);
             if(++retry > 5)
                 throw new Error('Unable to change lock state');
 
             return installation.client({ uri }).then(({ result }) => {
-                this.log(`Got "${result}" back from: ${uri}`);
+                logger(`Got "${result}" back from: ${uri}`);
                 if (typeof result === 'undefined' || result === 'NO_DATA') {
                     return new Promise(resolve => setTimeout(() =>
                         resolve(resolveChangeResult(uri)), 200));
@@ -114,10 +115,13 @@ class YaleDoormanApp extends Homey.App {
             .then(({ doorLockStateChangeTransactionId }) =>
                 resolveChangeResult(`/doorlockstate/change/result/${doorLockStateChangeTransactionId}`))
             .catch((error) => {
-                // this.log('Error code', error.errorCode);
+                logger('Error code', error.errorCode);
                 if (error.errorCode === 'VAL_00819') {
                     return true; // Lock already at desired state.
                 }
+                else if (error.errorCode === 'VAL_00008')
+                    throw new Error('Wrong code');
+
                 throw error;
             });
     }

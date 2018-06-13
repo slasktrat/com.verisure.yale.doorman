@@ -55,15 +55,11 @@
           "children": [
             {
               "id": "code",
-              "type": "number",
+              "type": "password",
               "label": {
                 "en": "Door lock code"
               },
-              "value": 0,
-              "attr": {
-                "min": 100000,
-                "max": 999999
-              },
+              "value": "",
               "hint": {
                 "en": "The code needed to lock and unlock the door."
               }
