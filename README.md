@@ -1,3 +1,10 @@
+# OOOPS!
+
+I made a mistake and believed Athom to bundle the dependencies automatically with the app, but that is apparently not the case. So installing the app from the Homey app store right now would give you a app that does not work :( I'm very sorry for that! I have submitted a new (working) version to Athom, but it will probably take 2-3 days until it is reviewed and available.
+
+Until then, if you would like to try out the app asap, you can give me your email address and I will add you to the alpha channel.
+
+
 # Yale Doorman
 
 Homey App for the Yale Doorman door lock
