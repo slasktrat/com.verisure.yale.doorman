@@ -8,7 +8,7 @@
     "en": "Yale Doorman"
   },
   "category": "security",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "compatibility": ">=1.5.3",
   "author": {
     "name": "Espen Ljosland",

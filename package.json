@@ -1,6 +1,6 @@
 {
   "name": "com.verisure.yale.doorman",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "This app allows you to connect your Yale Doorman to Homey",
   "main": "app.js",
   "dependencies": {
