@@ -8,7 +8,7 @@
     "en": "Yale Doorman"
   },
   "category": "security",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "compatibility": ">=1.5.3",
   "author": {
     "name": "Espen Ljosland",
@@ -68,5 +68,219 @@
         }
       ]
     }
-  ]
+  ],
+  "flow": {
+    "triggers" : [
+      {
+        "id":"unlocked_by_method",
+        "title": {
+          "en": "Unlocked by method"
+        },
+        "tokens": [
+          {
+            "name": "method",
+            "type": "string",
+            "title": {
+              "en": "How"
+            },
+            "example": {
+              "en": "REMOTE"
+            }
+          },
+          {
+            "name": "userString",
+            "type": "string",
+            "title": {
+              "en": "Who"
+            },
+            "example": {
+              "en": "My Name"
+            }
+          }
+        ],
+        "args": [
+          {
+            "name": "method",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Method"
+            }
+          },
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=doorman"
+          }
+        ]
+      },
+      {
+        "id":"locked_by_method",
+        "title": {
+          "en": "Locked by method"
+        },
+        "tokens": [
+          {
+            "name": "method",
+            "type": "string",
+            "title": {
+              "en": "How"
+            },
+            "example": {
+              "en": "REMOTE"
+            }
+          },
+          {
+            "name": "userString",
+            "type": "string",
+            "title": {
+              "en": "Who"
+            },
+            "example": {
+              "en": "My Name"
+            }
+          }
+        ],
+        "args": [
+          {
+            "name": "method",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Method"
+            }
+          },
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=doorman"
+          }
+        ]
+      },
+      {
+        "id":"unlocked_by_user",
+        "title": {
+          "en": "Unlocked by user"
+        },
+        "tokens": [
+          {
+            "name": "method",
+            "type": "string",
+            "title": {
+              "en": "How"
+            },
+            "example": {
+              "en": "REMOTE"
+            }
+          },
+          {
+            "name": "userString",
+            "type": "string",
+            "title": {
+              "en": "Who"
+            },
+            "example": {
+              "en": "My Name"
+            }
+          }
+        ],
+        "args": [
+          {
+            "name": "userString",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Name"
+            }
+          },
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=doorman"
+          }
+        ]
+      },
+      {
+        "id":"locked_by_user",
+        "title": {
+          "en": "Locked by user"
+        },
+        "tokens": [
+          {
+            "name": "method",
+            "type": "string",
+            "title": {
+              "en": "How"
+            },
+            "example": {
+              "en": "REMOTE"
+            }
+          },
+          {
+            "name": "userString",
+            "type": "string",
+            "title": {
+              "en": "Who"
+            },
+            "example": {
+              "en": "My Name"
+            }
+          }
+        ],
+        "args": [
+          {
+            "name": "userString",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Name"
+            }
+          },
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=doorman"
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "lock_method_is",
+        "title": {
+          "en": "Lock/unlock method !{{is|is not}}"
+        },
+        "args": [
+          {
+            "name": "method",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Method"
+            }
+          },
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=doorman"
+          }
+        ]
+      },
+      {
+        "id": "lock_user_is",
+        "title": {
+          "en": "Lock/unlock user !{{is|is not}}"
+        },
+        "args": [
+          {
+            "name": "userString",
+            "type": "autocomplete",
+            "placeholder": {
+              "en": "Name"
+            }
+          },
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=doorman"
+          }
+        ]
+      }
+    ]
+  }
 }

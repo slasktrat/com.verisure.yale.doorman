@@ -130,7 +130,7 @@ class YaleDoormanApp extends Homey.App {
         this.log(`${lock.area} updated`);
         this._doorLockStatusList[lock.deviceLabel] = lock;
         this._installations[lock.deviceLabel] = installation;
-        this._homeyDoormanDriver.updateCapabilities(lock);
+        this._homeyDoormanDriver.updateCapabilities.call(this._homeyDoormanDriver, lock);
     }
 }
 module.exports = YaleDoormanApp;
