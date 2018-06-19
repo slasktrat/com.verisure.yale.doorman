@@ -7,46 +7,50 @@ class MyDriver extends Homey.Driver {
 	
 	onInit() {
 
+	    this._unknownUserString = 'Unknown';
 		this._userStringKey = 'userStrings';
-        this._userStrings = Homey.ManagerSettings.get(this._userStringKey) || [];
+        this._userStrings = Homey.ManagerSettings.get(this._userStringKey) || [ this._unknownUserString];
 
-        this.unlockedByUserTrigger = new Homey.FlowCardTriggerDevice('unlocked_by_user');
-        this.unlockedByUserTrigger
+        this._lockStateChangedTrigger = new Homey.FlowCardTriggerDevice('lock_state_changed');
+        this._lockStateChangedTrigger.register();
+
+        this._unlockedByUserTrigger = new Homey.FlowCardTriggerDevice('unlocked_by_user');
+        this._unlockedByUserTrigger
             .register()
-            .registerRunListener(this.byUserMatch)
+            .registerRunListener(this.byUserMatch.bind(this))
             .getArgument('userString')
             .registerAutocompleteListener(this.onAutoCompleteUser.bind(this));
 
-        this.lockedByUserTrigger = new Homey.FlowCardTriggerDevice('locked_by_user');
-        this.lockedByUserTrigger
+        this._lockedByUserTrigger = new Homey.FlowCardTriggerDevice('locked_by_user');
+        this._lockedByUserTrigger
             .register()
-            .registerRunListener(this.byUserMatch)
+            .registerRunListener(this.byUserMatch.bind(this))
             .getArgument('userString')
             .registerAutocompleteListener(this.onAutoCompleteUser.bind(this));
 
-        this.unlockedByMethodTrigger = new Homey.FlowCardTriggerDevice('unlocked_by_method');
-        this.unlockedByMethodTrigger
+        this._unlockedByMethodTrigger = new Homey.FlowCardTriggerDevice('unlocked_by_method');
+        this._unlockedByMethodTrigger
             .register()
-            .registerRunListener(this.byMethodMatch)
+            .registerRunListener(this.byMethodMatch.bind(this))
             .getArgument('method')
             .registerAutocompleteListener(this.onAutoCompleteMethodUnlock.bind(this));
 
-        this.lockedByMethodTrigger = new Homey.FlowCardTriggerDevice('locked_by_method');
-        this.lockedByMethodTrigger
+        this._lockedByMethodTrigger = new Homey.FlowCardTriggerDevice('locked_by_method');
+        this._lockedByMethodTrigger
             .register()
-            .registerRunListener(this.byMethodMatch)
+            .registerRunListener(this.byMethodMatch.bind(this))
             .getArgument('method')
             .registerAutocompleteListener(this.onAutoCompleteMethodLock.bind(this));
 
-        this.lockedMethodCondition = new Homey.FlowCardCondition('lock_method_is');
-        this.lockedMethodCondition
+        this._lockedMethodCondition = new Homey.FlowCardCondition('lock_method_is');
+        this._lockedMethodCondition
             .register()
             .registerRunListener(args => this.conditionMatch(args, 'method'))
             .getArgument('method')
             .registerAutocompleteListener(this.onAutoCompleteMethodLock.bind(this));
 
-        this.lockedUserCondition = new Homey.FlowCardCondition('lock_user_is');
-        this.lockedUserCondition
+        this._lockedUserCondition = new Homey.FlowCardCondition('lock_user_is');
+        this._lockedUserCondition
             .register()
             .registerRunListener(args => this.conditionMatch(args, 'userString'))
             .getArgument('userString')
@@ -62,7 +66,7 @@ class MyDriver extends Homey.Driver {
 
         let userString = lock.userString;
         if(!userString) {
-            lock.userString = 'Unknown';
+            lock.userString = this._unknownUserString;
             userString = lock.userString;
 		}
 
@@ -73,19 +77,23 @@ class MyDriver extends Homey.Driver {
 			Homey.ManagerSettings.set(this._userStringKey, _.uniq(this._userStrings).sort());
 		}
 
-        homeyDevice.setLockStatus(lock);
-
         let state = {
             method: lock.method,
-            userString: userString
+            userString: userString,
+            locked: lock.lockedState === 'LOCKED'
         };
-        if(lock.lockedState === 'LOCKED') {
-            this.lockedByUserTrigger.trigger(homeyDevice, state, state).catch(this.error);
-            this.lockedByMethodTrigger.trigger(homeyDevice, state, state).catch(this.error);
+
+        homeyDevice.setLockStatus(lock);
+        this.log(state);
+
+        this._lockStateChangedTrigger.trigger(homeyDevice, state, state).catch(this.error);
+        if(state.locked) {
+            this._lockedByUserTrigger.trigger(homeyDevice, state, state).catch(this.error);
+            this._lockedByMethodTrigger.trigger(homeyDevice, state, state).catch(this.error);
         }
         else {
-            this.unlockedByUserTrigger.trigger(homeyDevice, state, state).catch(this.error);
-        	this.unlockedByMethodTrigger.trigger(homeyDevice, state, state).catch(this.error);
+            this._unlockedByUserTrigger.trigger(homeyDevice, state, state).catch(this.error);
+        	this._unlockedByMethodTrigger.trigger(homeyDevice, state, state).catch(this.error);
         }
 	}
 	
@@ -143,7 +151,7 @@ class MyDriver extends Homey.Driver {
     }
 
     onAutoCompleteMethodLock() {
-        return [ {name:'Code'}, {name:'Tag'}, {name:'Thumb'}, {name:'Remote'}, {name:'Star'} ];
+        return [ {name:'Auto'}, {name:'Code'}, {name:'Tag'}, {name:'Thumb'}, {name:'Remote'}, {name:'Star'} ];
     }
 
     onAutoCompleteMethodUnlock() {

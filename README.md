@@ -9,9 +9,15 @@ Both credentials and pin code are stored securely on your own Homey.
 
 ## Release notes
 
-#### 1.0.0
-- [X] Added new flow triggers and conditions for lock and unlock to filter by method and/or user (all users must have locked or unlocked the lock once before appearing in the user list)
+#### 1.0.1
+- Added additional flow trigger: "Lock state changed"
+- Added support for lock method "Auto"
 
+#### 1.0.0
+- Added new flow triggers and conditions to filter by method and/or user (all users must have locked or unlocked the lock once before appearing in the user list)
+
+#### 0.0.x
+- Initial version
 
 ## Disclaimer 
 This app uses an unofficial api from verisure which may break at any time. And if so should happen the app would stop working. However the api seem to have been stable for a long time, so hopefully that will continue to last.

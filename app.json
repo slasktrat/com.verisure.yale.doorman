@@ -8,7 +8,7 @@
     "en": "Yale Doorman"
   },
   "category": "security",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "compatibility": ">=1.5.3",
   "author": {
     "name": "Espen Ljosland",
@@ -71,6 +71,48 @@
   ],
   "flow": {
     "triggers" : [
+      {
+        "id":"lock_state_changed",
+        "title": {
+          "en": "Lock state changed"
+        },
+        "tokens": [
+          {
+            "name": "locked",
+            "type": "boolean",
+            "title": {
+              "en": "Locked"
+            }
+          },
+          {
+            "name": "method",
+            "type": "string",
+            "title": {
+              "en": "How"
+            },
+            "example": {
+              "en": "REMOTE"
+            }
+          },
+          {
+            "name": "userString",
+            "type": "string",
+            "title": {
+              "en": "Who"
+            },
+            "example": {
+              "en": "My Name"
+            }
+          }
+        ],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=doorman"
+          }
+        ]
+      },
       {
         "id":"unlocked_by_method",
         "title": {
