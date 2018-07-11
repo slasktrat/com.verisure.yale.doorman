@@ -7,6 +7,7 @@ const   Homey                   = require('homey'),
 
 
 const doormanDriverName = "doorman";
+const minPollInterval = 30;
 
 class YaleDoormanApp extends Homey.App {
     
@@ -14,6 +15,7 @@ class YaleDoormanApp extends Homey.App {
         this._gatewayConnected = false;
         this._homeyDoormanDriver = Homey.ManagerDrivers.getDriver(doormanDriverName);
         this._installations = {};
+        this._alarmStates = {};
         this._doorLockStatusList = {};
         this._pollInterval = undefined;
 
@@ -29,6 +31,18 @@ class YaleDoormanApp extends Homey.App {
             }
         })();
 
+        this._alarmStateChangedTrigger = new Homey.FlowCardTrigger('alarm_state_changed_global');
+        this._alarmStateChangedTrigger.register();
+
+        this._alarmDisarmedTrigger = new Homey.FlowCardTrigger('alarm_disarmed_global');
+        this._alarmDisarmedTrigger.register();
+
+        this._alarmAlarmedHomeTrigger = new Homey.FlowCardTrigger('alarm_armed_home_global');
+        this._alarmAlarmedHomeTrigger.register();
+
+        this._alarmAlarmedAwayTrigger = new Homey.FlowCardTrigger('alarm_armed_away_global');
+        this._alarmAlarmedAwayTrigger.register();
+
         this.log(`Yale Doorman App has been initialized`);
     }
 
@@ -40,7 +54,12 @@ class YaleDoormanApp extends Homey.App {
             .then(installations => {
                 if(this._pollInterval !== undefined)
                     clearInterval(this._pollInterval);
-                let interval = Homey.ManagerSettings.get('interval');
+                let interval = Number(Homey.ManagerSettings.get('interval'));
+                if(_.isNaN(interval) || interval < minPollInterval) {
+                    Homey.ManagerSettings.set('interval', minPollInterval);
+                    interval = minPollInterval;
+                }
+
                 this._pollInterval = setInterval(this.getAllOverview.bind(this), interval * 1000);
 
                 this._installations = installations;
@@ -51,20 +70,46 @@ class YaleDoormanApp extends Homey.App {
 
     async getAllOverview() {
         if(this._gatewayConnected)
-            return Promise.map(this._installations, this.getOverview.bind(this));
+            return Promise.mapSeries(this._installations, this.getOverview.bind(this));
     }
 
     async getOverview(installation) {
         return installation.getOverview().then((overview) => {
             this.log('Overview fetched for installation ' + installation.giid);
-            // this.log('OVERVIEW:', overview);
-            // this._doorLockStatusList = overview.doorLockStatusList;
+
             _.each(overview.doorLockStatusList, lock => {
                 if(!this._doorLockStatusList[lock.deviceLabel] || this._doorLockStatusList[lock.deviceLabel].eventTime !== lock.eventTime)
                     this._lockUpdated(lock, installation);
             });
+
+            const alarmState = _.get(overview, 'armState.statusType');
+            if(this._alarmStates[installation.giid] !== alarmState) {
+                this.log('Setting alarm state', alarmState);
+                this._alarmStates[installation.giid] = alarmState;
+                const tokens = {state: alarmState, installation: Number(installation.giid)};
+                this.alarmChanged(tokens);
+                _.each(overview.doorLockStatusList, lock => {
+                    this._homeyDoormanDriver.alarmChanged.call(this._homeyDoormanDriver, lock, tokens);
+                });
+            }
+
             return overview;
         });
+    }
+
+    alarmChanged(tokens) {
+        this._alarmStateChangedTrigger.trigger(tokens).catch(this.error);
+        switch (tokens.state) {
+            case 'DISARMED':
+                this._alarmDisarmedTrigger.trigger(tokens).catch(this.error);
+                break;
+            case 'ARMED_HOME':
+                this._alarmAlarmedHomeTrigger.trigger(tokens).catch(this.error);
+                break;
+            case 'ARMED_AWAY':
+                this._alarmAlarmedAwayTrigger.trigger(tokens).catch(this.error);
+                break;
+        }
     }
 
     isConnected() {

@@ -8,7 +8,7 @@
     "en": "Yale Doorman"
   },
   "category": "security",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "compatibility": ">=1.5.3",
   "author": {
     "name": "Espen Ljosland",
@@ -71,6 +71,151 @@
   ],
   "flow": {
     "triggers" : [
+      {
+        "id":"alarm_state_changed_global",
+        "title": {
+          "en": "Alarm state changed"
+        },
+        "tokens": [
+          {
+            "name": "state",
+            "type": "string",
+            "title": {
+              "en": "state"
+            },
+            "example": {
+              "en": "DISARMED, ARMED_HOME or ARMED_AWAY"
+            }
+          },
+          {
+            "name": "installation",
+            "type": "number",
+            "title": {
+              "en": "installation"
+            },
+            "example": {
+              "en": "12345678987"
+            }
+          }
+        ]
+      },
+      {
+        "id":"alarm_disarmed_global",
+        "title": {
+          "en": "Alarm disarmed"
+        },
+        "tokens": [
+          {
+            "name": "installation",
+            "type": "number",
+            "title": {
+              "en": "installation"
+            },
+            "example": {
+              "en": "12345678987"
+            }
+          }
+        ]
+      },
+      {
+        "id":"alarm_armed_home_global",
+        "title": {
+          "en": "Alarm partially armed"
+        },
+        "tokens": [
+          {
+            "name": "installation",
+            "type": "number",
+            "title": {
+              "en": "installation"
+            },
+            "example": {
+              "en": "12345678987"
+            }
+          }
+        ]
+      },
+      {
+        "id":"alarm_armed_away_global",
+        "title": {
+          "en": "Alarm armed"
+        },
+        "tokens": [
+          {
+            "name": "installation",
+            "type": "number",
+            "title": {
+              "en": "installation"
+            },
+            "example": {
+              "en": "12345678987"
+            }
+          }
+        ]
+      },{
+        "id":"alarm_state_changed",
+        "title": {
+          "en": "Alarm state changed"
+        },
+        "tokens": [
+          {
+            "name": "state",
+            "type": "string",
+            "title": {
+              "en": "state"
+            },
+            "example": {
+              "en": "DISARMED, ARMED_HOME or ARMED_AWAY"
+            }
+          }
+        ],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=doorman"
+          }
+        ]
+      },
+      {
+        "id":"alarm_disarmed",
+        "title": {
+          "en": "Alarm disarmed"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=doorman"
+          }
+        ]
+      },
+      {
+        "id":"alarm_armed_home",
+        "title": {
+          "en": "Alarm partially armed"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=doorman"
+          }
+        ]
+      },
+      {
+        "id":"alarm_armed_away",
+        "title": {
+          "en": "Alarm armed"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=doorman"
+          }
+        ]
+      },
       {
         "id":"lock_state_changed",
         "title": {

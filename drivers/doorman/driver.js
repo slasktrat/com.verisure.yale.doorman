@@ -56,9 +56,40 @@ class MyDriver extends Homey.Driver {
             .getArgument('userString')
             .registerAutocompleteListener(this.onAutoCompleteUser.bind(this));
 
+        this._alarmStateChangedTrigger = new Homey.FlowCardTriggerDevice('alarm_state_changed');
+        this._alarmStateChangedTrigger.register();
+
+        this._alarmDisarmedTrigger = new Homey.FlowCardTriggerDevice('alarm_disarmed');
+        this._alarmDisarmedTrigger.register();
+
+        this._alarmAlarmedHomeTrigger = new Homey.FlowCardTriggerDevice('alarm_armed_home');
+        this._alarmAlarmedHomeTrigger.register();
+
+        this._alarmAlarmedAwayTrigger = new Homey.FlowCardTriggerDevice('alarm_armed_away');
+        this._alarmAlarmedAwayTrigger.register();
+
 		this.log('Yale Doorman driver has been initialized');
 	}
-	
+
+	alarmChanged(lock, tokens) {
+        let homeyDevice = this.getDevice({id: lock.deviceLabel});
+        if (homeyDevice instanceof Error) return;
+
+        this.log('Alarm state updated', tokens);
+        this._alarmStateChangedTrigger.trigger(homeyDevice, tokens).catch(this.error);
+        switch (tokens.state) {
+            case 'DISARMED':
+                this._alarmDisarmedTrigger.trigger(homeyDevice, tokens).catch(this.error);
+                break;
+            case 'ARMED_HOME':
+                this._alarmAlarmedHomeTrigger.trigger(homeyDevice, tokens).catch(this.error);
+                break;
+            case 'ARMED_AWAY':
+                this._alarmAlarmedAwayTrigger.trigger(homeyDevice, tokens).catch(this.error);
+                break;
+        }
+    }
+
 	updateCapabilities(lock)
 	{
 		let homeyDevice = this.getDevice({id: lock.deviceLabel});
@@ -77,23 +108,23 @@ class MyDriver extends Homey.Driver {
 			Homey.ManagerSettings.set(this._userStringKey, _.uniq(this._userStrings).sort());
 		}
 
-        let state = {
+        let tokens = {
             method: lock.method,
             userString: userString,
             locked: lock.lockedState === 'LOCKED'
         };
 
         homeyDevice.setLockStatus(lock);
-        this.log(state);
+        this.log('Lock state updated', tokens);
 
-        this._lockStateChangedTrigger.trigger(homeyDevice, state, state).catch(this.error);
-        if(state.locked) {
-            this._lockedByUserTrigger.trigger(homeyDevice, state, state).catch(this.error);
-            this._lockedByMethodTrigger.trigger(homeyDevice, state, state).catch(this.error);
+        this._lockStateChangedTrigger.trigger(homeyDevice, tokens, tokens).catch(this.error);
+        if(tokens.locked) {
+            this._lockedByUserTrigger.trigger(homeyDevice, tokens, tokens).catch(this.error);
+            this._lockedByMethodTrigger.trigger(homeyDevice, tokens, tokens).catch(this.error);
         }
         else {
-            this._unlockedByUserTrigger.trigger(homeyDevice, state, state).catch(this.error);
-        	this._unlockedByMethodTrigger.trigger(homeyDevice, state, state).catch(this.error);
+            this._unlockedByUserTrigger.trigger(homeyDevice, tokens, tokens).catch(this.error);
+        	this._unlockedByMethodTrigger.trigger(homeyDevice, tokens, tokens).catch(this.error);
         }
 	}
 	
