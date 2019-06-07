@@ -16,7 +16,7 @@ class MyDevice extends Homey.Device {
         this.registerCapabilityListener('locked', ( value, opts ) => {
         	let code = this.getSettings().code;
         	if(!code)
-        		return Promise.reject('You must set the code to lock/unlock the door.');
+        		return Promise.reject(new Error('You must set the code to lock/unlock the door.'));
         	return Homey.app.setTargetLockState(this._deviceLabel, value, code);
         });
 

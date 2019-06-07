@@ -99,7 +99,7 @@ class YaleDoormanApp extends Homey.App {
         function resolveChangeResult(uri) {
             logger(`Resolving: ${uri}`);
             if(++retry > 5)
-                throw new Error('Unable to change lock state');
+                return Promise.reject(new Error('Unable to change lock state'));
 
             return installation.client({ uri }).then(({ result }) => {
                 logger(`Got "${result}" back from: ${uri}`);
@@ -120,9 +120,9 @@ class YaleDoormanApp extends Homey.App {
                     return true; // Lock already at desired state.
                 }
                 else if (error.errorCode === 'VAL_00008')
-                    throw new Error('Wrong code');
+                    return Promise.reject(new Error('Wrong code'));
 
-                throw error;
+                return Promise.reject(error);
             });
     }
 
