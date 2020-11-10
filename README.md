@@ -9,6 +9,18 @@ Both credentials and pin code are stored securely on your own Homey.
 
 ## Release notes
 
+#### 1.1.1
+- Added flow triggers: "Alarm state changed", "Alarm disarmed", "Alarm partially armed" and "Alarm armed"
+
+#### 1.0.4
+- Minor bugfix
+
+#### 1.0.3
+- Added flow triggers: "Alarm state changed", "Alarm disarmed", "Alarm partially armed" and "Alarm armed"  
+
+#### 1.0.2
+- Added additional flow trigger: "Lock state changed"  
+
 #### 1.0.1
 - Added additional flow trigger: "Lock state changed"
 - Added support for lock method "Auto"

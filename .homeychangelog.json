@@ -1,0 +1,8 @@
+{
+  "1.1.0": {
+    "en": "Added flow triggers: \"Alarm state changed\", \"Alarm disarmed\", \"Alarm partially armed\" and \"Alarm armed\""
+  },
+  "1.1.1": {
+    "en": "Added flow triggers: \"Alarm state changed\", \"Alarm disarmed\", \"Alarm partially armed\" and \"Alarm armed\""
+  }
+}
