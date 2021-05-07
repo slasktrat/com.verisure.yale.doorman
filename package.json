@@ -5,7 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "bluebird": "^3.5.1",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.21",
     "verisure": "^2.4.0"
   },
   "scripts": {
